@@ -6,6 +6,7 @@ var jsonParser = bodyParser.json();
 
 var router = express.Router();
 
+var mainDomain = "wingoku.com";
 var connection;
 var response;
 var shortUrl;
@@ -30,7 +31,7 @@ router.post('/yolo', jsonParser, function(req, res, next) {
     //response.json({ title: 'NewTitle', shortenedUrl: shortenedUrl}); uncomment later
 
     var insertDataInTableQuery = "INSERT INTO `WinGoku`.`ShortenedUrlsTable` (`OriginalUrl`, `ShortUrl`) VALUES('"+req.body.textBoxValue+ "', '"+ shortUrl +"')";
-    runSQLQuery(insertDataInTableQuery, handleMysqlDBQueryResponse);
+    runSQLQuery(insertDataInTableQuery, handleMysqlDBQueryResponse, sendResponseToClient);
 });
 
 function mySqlDatabase() {
@@ -68,12 +69,8 @@ function shortenTheUrl(url) {
         shortenedUrl += allCharacters.charAt(Math.random()*allCharacters.length);
     }
 
-    console.log("theShortenedUrlIS: "+ url.concat(shortenedUrl) + " orignal: "+ url);
-    return url.concat(shortenedUrl);
-}
-
-function getUrlFromForm(request) {
-    console.log("Url is: "+ request.urlForm.urlEditText);
+    console.log("theShortenedUrlIS: "+ mainDomain.concat(shortenedUrl) + " orignal: "+ url);
+    return mainDomain.concat(shortenedUrl);
 }
 
 function handleMysqlDBQueryResponse(queryExecutionResult) {
@@ -93,29 +90,29 @@ function sendResponseToClient(queryExecutionResult, dataReturnedFromQuery) {
 
     if(queryExecutionResult["errorMessage"] !== "successful")
         console.log("failed: "+ dataReturnedFromQuery);
-    console.log("1: "+ queryExecutionResult["type"] + " 2: "+ queryExecutionResult["errorMessage"] + " data: "+ dataReturnedFromQuery[0].ShortUrl);
-    response.json({shortenedUrl: dataReturnedFromQuery.shortUrl, type: queryExecutionResult["type"], message: mess});
+    console.log("1: "+ queryExecutionResult["type"] + " 2: "+ queryExecutionResult["errorMessage"] + " data: "+ dataReturnedFromQuery);
+    response.json({shortenedUrl: dataReturnedFromQuery, type: queryExecutionResult["type"], message: mess});
 
 }
 
-function getValueFromDatabase() {
-
-}
-
-function runSQLQuery(query, callbackFunction) {
+function runSQLQuery(query, handleDBQueryResponse, sendDataToClientUponDBQuerySuccess) {
     console.log("run sql querys");
     connection.query(query, function(error, row, field) {
-        if(error) {
+        if (error) {
             //console.log(query);
-            console.log("QueryError: "+ error+ " query: "+ query);
-            if(callbackFunction != undefined)
-                callbackFunction({type: "alert", errorMessage: error});
+            console.log("QueryError: " + error + " query: " + query);
+            if (handleDBQueryResponse != undefined)
+                handleDBQueryResponse({type: "alert", errorMessage: error});
             return;
         }
         console.log("query successfull: ");
 
-        if(callbackFunction != undefined)
-            callbackFunction({type: "alert", errorMessage: "successful"}, row);
+        if (sendDataToClientUponDBQuerySuccess != undefined) {
+            if(row === undefined)
+                sendDataToClientUponDBQuerySuccess({type: "alert", errorMessage: "successful"}, shortUrl);
+            else
+                sendDataToClientUponDBQuerySuccess({type: "alert", errorMessage: "successful"}, row[0].ShortUrl);
+        }
     });
 }
 
