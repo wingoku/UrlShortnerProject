@@ -1,0 +1,48 @@
+HOW EXPRESS NODEJS DELIVERS DATA FROM HTML FORM TO THE NODEJS FILES?
+---------------------------------------------------------------------
+
+When a form submits data, the data is delivered to the method with the same tag as the 'action' tag in the form. Express Nodejs first looks
+for a method with that tag inside the routes/theFileThatHasRenderedTheCurrentWebpage.js, if the method is found, the data is deliverd to
+it. However if a method with that tag isn't found inside routes/theFileThatHasRenderedTheCurrentWebpage.js, Express NodeJS looks for a
+method with that tag inside the app.js file. If it doesn't find any method with that tag in app.js, the webpage says 404 error
+
+
+ADDING LIBRARIES IN THE PROJECT?
+--------------------------------
+
+Go to the directory of the project and type "npm install LIBRARY_NAME" in cmd
+
+
+SENDING DATA FROM BROWSER TO SERVER:
+------------------------------------
+
+Use Jquery for this. following code works:
+
+$.post('/pathForWhichTheJSFileIsListening', function(callbackData) {
+    console.log("data from server is: "+ callbackData.JSON_KEY_SENT_FROM_THE_SERVER );
+});
+
+
+SENDING DATA FROM SERVER TO BROWSER:
+-------------------------------------
+
+router.post('/thePathAtWhichBrowserSentPostData', function(req, res, next) {
+    res.json({JSON_KEY_1: DATA_FOR_JSON_KEY_1, JSON_KEY_2: DATA_FOR_JSON_KEY_2});
+});
+
+
+UPDATING HTML WITHOUT RELOADING PAGE:
+-------------------------------------
+
+$.post('/pathForWhichTheJSFileIsListening', function(callbackData) {
+    $("#myHtmlElementID").html(callbackData.JSON_KEY_SENT_FROM_THE_SERVER); // this will insert the new data in the html element with the mentioned id
+});
+
+
+
+read it later:
+As I already had said (in the deleted answer) you dont send data to a js file when working with nodejs, this is not like php the request is send to a port, the library e.g. express parses the request and passes it to the matching route. The index.js file is not the route, you define one or more routes with a js file, but the path of the route does not need to be in any realtion with the name of the js file in which you define it. You should read some basic tutorials about express before continuing. And first check if you get a get request working
+
+
+
+

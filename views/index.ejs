@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1 id="pageTitle"><%= title %></h1>
+    <p id="myTitle">Welcome to <%= title %></p>
+
+    <script type = "text/javascript"
+            src = "http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    <script type = "text/javascript" language = "javascript">
+
+      $(document).ready(function() {
+        $("#myButton").bind('click', function() {
+          event.preventDefault();
+          var data = $('#myEditText').val();
+          var result = $.post('/yolo', {textBoxValue: data}, function(callback) {
+              $(document).ready(function(){
+
+                  if(callback.type === "alert") {
+                      alert(callback.message);
+                  }
+
+                  $("#shortURLField").html(callback.shortenedUrl);
+              });
+          });
+
+          result.done(function(data) {
+          });
+          result.fail(function(error) {
+            document.write("failed: "+ error.responseText);
+          });
+        });
+      });
+
+    </script>
+    <form id = "myForm" action = "http://localhost:3000/yolo" method="post"> <!--action = "http://127.0.0.1/index.js" is for telling the browser which script file will handle the data from this form upon submission -->
+      Enter Url: <input id="myEditText" type="text" name="urlEditText"/>
+      <br />
+      <br />
+      <p id="shorteneURLTextView">Shortened Url: <span id="shortURLField"><%= shortenedUrl %> </span> </p> <!--// shortened url passed from the server -->
+      <br />
+      <br />
+      <button id="myButton" type="button" value="Submit"> Submit </button>
+    </form>
+
+
+  </body>
+</html>
