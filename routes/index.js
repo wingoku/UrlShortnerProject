@@ -27,8 +27,13 @@ router.post('/yolo', jsonParser, function(req, res, next) {
 
     response = res;
     originalUrl = req.body.textBoxValue;
+
+    if(isUrlValid(originalUrl)) {
+        sendResponseToClient({type: "alert", errorMessage: "Invalid Url Entered"});
+        return;
+    }
+
     shortUrl = shortenTheUrl(req.body.textBoxValue);
-    //response.json({ title: 'NewTitle', shortenedUrl: shortenedUrl}); uncomment later
 
     var insertDataInTableQuery = "INSERT INTO `WinGoku`.`ShortenedUrlsTable` (`OriginalUrl`, `ShortUrl`) VALUES('"+req.body.textBoxValue+ "', '"+ shortUrl +"')";
     runSQLQuery(insertDataInTableQuery, handleMysqlDBQueryResponse, sendResponseToClient);
@@ -95,6 +100,16 @@ function sendResponseToClient(queryExecutionResult, dataReturnedFromQuery) {
 
 }
 
+function isUrlValid(url) {
+    console.log("validity", "indexOf(.) "+ url.indexOf(".") + " valueAfter. : "+url.charAt(url.indexOf(".")+1) );
+
+    if(url.indexOf(".") !== -1 && url.charAt(url.indexOf(".")+1) !== '') {
+        console.log("checkValidityOfUrl", "url is valid");
+        return false;
+    }
+    return true;
+}
+
 function runSQLQuery(query, handleDBQueryResponse, sendDataToClientUponDBQuerySuccess) {
     console.log("run sql querys");
     connection.query(query, function(error, row, field) {
@@ -108,7 +123,8 @@ function runSQLQuery(query, handleDBQueryResponse, sendDataToClientUponDBQuerySu
         console.log("query successfull: ");
 
         if (sendDataToClientUponDBQuerySuccess != undefined) {
-            if(row === undefined)
+            console.log("yolo", row);
+            if(row[0] == undefined) // row[0] is being checked in this case because we know all the entries in the table are unique and for each original url their is only one row will be returned.
                 sendDataToClientUponDBQuerySuccess({type: "alert", errorMessage: "successful"}, shortUrl);
             else
                 sendDataToClientUponDBQuerySuccess({type: "alert", errorMessage: "successful"}, row[0].ShortUrl);
