@@ -39,6 +39,15 @@ $.post('/pathForWhichTheJSFileIsListening', function(callbackData) {
 });
 
 
+REDIRECTING TO ANOTHER WEBSITE:
+----------------------------------
+
+If the client has sent a request using JQUERY to the nodeJS server to redirect to some another website, the nodejs server won't be able to redirect
+to another website by using, response.redirect("yourUrlAddress"); or response.statusCode = 302, response.writeHeader("Location", "yourURLAddress");, response.end()
+In this case, the redirect to another website must be handled on the client side by using JQUERY or simply by using the following code:
+
+window.location.replace = "yourUrlAddress"
+
 
 read it later:
 As I already had said (in the deleted answer) you dont send data to a js file when working with nodejs, this is not like php the request is send to a port, the library e.g. express parses the request and passes it to the matching route. The index.js file is not the route, you define one or more routes with a js file, but the path of the route does not need to be in any realtion with the name of the js file in which you define it. You should read some basic tutorials about express before continuing. And first check if you get a get request working
