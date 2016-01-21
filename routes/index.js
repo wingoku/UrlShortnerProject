@@ -1,8 +1,5 @@
 var express = require('express');
 var mySql = require('mysql');
-var bodyParser = require('body-parser');
-
-var jsonParser = bodyParser.json();
 
 var router = express.Router();
 
@@ -19,11 +16,7 @@ router.get('/', function(req, res, next) {
     mySqlDatabase();
 });
 
-router.get('/yolo', function(req, res, next) {
-    console.log("hello inside index.js method 1: "+ req.body.urlEditText);
-});
-
-router.post('/yolo', jsonParser, function(req, res, next) {
+router.post('/yolo', function(req, res, next) {
 
     response = res;
     originalUrl = req.body.textBoxValue;

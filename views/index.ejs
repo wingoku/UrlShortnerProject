@@ -11,8 +11,9 @@
     <script type = "text/javascript"
             src = "http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
-    <script type = "text/javascript" language = "javascript">
+    <script type = "text/javascript" language = "javascript">;
 
+      var shortendUrl;
       $(document).ready(function() {
         $("#myButton").bind('click', function() {
           event.preventDefault();
@@ -24,6 +25,7 @@
                       alert(callback.message);
                   }
 
+                  shortendUrl = callback.shortenedUrl;
                   $("#shortURLField").html(callback.shortenedUrl);
               });
           });
@@ -33,6 +35,11 @@
           result.fail(function(error) {
             document.write("failed: "+ error.responseText);
           });
+        });
+
+        $("#goToShortenedUrlButton").bind("click", function() {
+          alert("redirect button pressed");
+          window.location.replace("http://"+shortendUrl);
         });
       });
 
@@ -45,6 +52,7 @@
       <br />
       <br />
       <button id="myButton" type="button" value="Submit"> Submit </button>
+      <button id="goToShortenedUrlButton" type="button" value="Submit">Go To Shortened Url Website</button>
     </form>
 
 
