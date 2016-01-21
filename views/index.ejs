@@ -18,16 +18,8 @@
         $("#myButton").bind('click', function() {
           event.preventDefault();
           var data = $('#myEditText').val();
-          var result = $.post('/yolo', {textBoxValue: data}, function(callback) {
-              $(document).ready(function(){
-
-                  if(callback.type === "alert") {
-                      alert(callback.message);
-                  }
-
-                  shortendUrl = callback.shortenedUrl;
-                  $("#shortURLField").html(callback.shortenedUrl);
-              });
+          var result = $.post('/yolo', {textBoxValue: data}, function(dataFromServer) {
+              handleResponseFromServer(dataFromServer);
           });
 
           result.done(function(data) {
@@ -41,6 +33,26 @@
           alert("redirect button pressed");
           window.location.replace("http://"+shortendUrl);
         });
+
+        $("#myEditText").bind("keypress", function(key) {
+            if(key.which == 13) {// enter key
+              event.preventDefault(); // prevents the browser to automatically call the submit method and send data to the server
+              alert("enter button pressed");
+              var data = $('#myEditText').val();
+              $.post('/yolo', {textBoxValue: data}, function(dataFromServer) {
+                  handleResponseFromServer(dataFromServer);
+              });
+            }
+        });
+
+        function handleResponseFromServer(dataFromServer) {
+            if(dataFromServer.type === "alert") {
+              alert(dataFromServer.message);
+            }
+
+            shortendUrl = dataFromServer.shortenedUrl;
+            $("#shortURLField").html(dataFromServer.shortenedUrl);
+        }
       });
 
     </script>

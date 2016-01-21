@@ -94,7 +94,7 @@ function sendResponseToClient(queryExecutionResult, dataReturnedFromQuery) {
 }
 
 function isUrlValid(url) {
-    console.log("validity", "indexOf(.) "+ url.indexOf(".") + " valueAfter. : "+url.charAt(url.indexOf(".")+1) );
+    console.log("validity", "url: "+ url+" indexOf(.) "+ url.indexOf(".") + " valueAfter. : "+url.charAt(url.indexOf(".")+1) );
 
     if(url.indexOf(".") !== -1 && url.charAt(url.indexOf(".")+1) !== '') {
         console.log("checkValidityOfUrl", "url is valid");
