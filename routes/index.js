@@ -11,7 +11,7 @@ var originalUrl;
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express', shortenedUrl: ''});
+  res.render('index', { title: 'Welcome to WinGoku Url Shortner', shortenedUrl: ''});
     console.log("index.js method 0");
     mySqlDatabase();
 });
